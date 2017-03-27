@@ -7,9 +7,9 @@ from helper_functions import *
 
 fig_idx = 0
 
-for file in [f for f in os.listdir('test_images') if f.endswith('.jpg')]:
+for file in [f for f in os.listdir('../test_images') if f.endswith('.jpg')]:
     
-    test_image_filename = os.path.join('test_images', file)
+    test_image_filename = os.path.join('../test_images', file)
     print('Showing pipeline for image ' + test_image_filename)
     test_image = mpimg.imread(test_image_filename)
     gray_image = grayscale(test_image)
