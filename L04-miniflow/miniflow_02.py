@@ -1,3 +1,5 @@
+import numpy as np
+
 """
 Bonus Challenge!
 
@@ -60,13 +62,16 @@ class Add(Node):
         Node.__init__(self, inputs)
 
     def forward(self):
-        """
-        For reference, here's the old way from the last
-        quiz. You'll want to write code here.
-        """
-        # x_value = self.inbound_nodes[0].value
-        # y_value = self.inbound_nodes[1].value
-        # self.value = x_value + y_value
+        self.value = sum(n.value for n in self.inbound_nodes if n.value is not None)
+
+class Mul(Node):
+    # You may need to change this...
+    def __init__(self, *inputs):
+        Node.__init__(self, inputs)
+
+    def forward(self):
+        fuck = list([n.value for n in self.inbound_nodes if n.value is not None])
+        self.value = np.product([n.value for n in self.inbound_nodes if n.value is not None])
 
 def topological_sort(feed_dict):
     """

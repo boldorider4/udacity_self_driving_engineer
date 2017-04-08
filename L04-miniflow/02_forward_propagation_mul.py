@@ -11,17 +11,17 @@ x, y, z = Input(), Input(), Input()
 a, b, c = Input(), Input(), Input()
 
 f = Add(x, y, z)
-#g = Mul(a, b, c)
+g = Mul(a, b, c)
 
 feed_dict_add = {x: 4, y: 5, z: 10}
-feed_dict_mul = {a: 4, b: 5, c: 10}
+feed_dict_mul = {a: 3, b: 6, c: 9}
 
 graph = topological_sort(feed_dict_add)
 output = forward_pass(f, graph)
 # should output 19
-print("{} + {} + {} = {} (according to miniflow)".format(feed_dict[x], feed_dict[y], feed_dict[z], output))
+print("{} + {} + {} = {} (according to miniflow)".format(feed_dict_add[x], feed_dict_add[y], feed_dict_add[z], output))
 
 graph = topological_sort(feed_dict_mul)
-#output = forward_pass(g, graph)
-# should output 200
-print("{} + {} + {} = {} (according to miniflow)".format(feed_dict[x], feed_dict[y], feed_dict[z], output))
+output = forward_pass(g, graph)
+# should output 162
+print("{} + {} + {} = {} (according to miniflow)".format(feed_dict_mul[a], feed_dict_mul[b], feed_dict_mul[c], output))
