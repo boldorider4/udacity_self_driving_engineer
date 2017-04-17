@@ -15,3 +15,6 @@ def run():
         output = sess.run(softmax, feed_dict = {logits: logit_data})
 
     return output
+
+output = run()
+print(output)
