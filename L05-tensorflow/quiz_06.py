@@ -10,14 +10,17 @@ def batches(batch_size, features, labels):
     :return: Batches of (Features, Labels)
     """
     assert len(features) == len(labels)
-    n_batches = math.ceil(len(features)/batch_size)
     # Implement batching
     output = []
-    for b in range(0, n_batches-1):
-        feature_batch = features[(b*batch_size):((b+1) * batch_size - 1), :]
-        labels_batch = labels[(b*batch_size):((b+1) * batch_size - 1), :]
-        output.append([feature_batch, labels_batch])
+    temp_features = []
+    temp_labels = []
 
-    feature_batch = features[((n_batches-1)*batch_size):(len(features)-1), :]
-    labels_batch = labels[((n_batches-1)*batch_size):(len(labels)-1), :]
-    output.append([feature_batch, labels_batch])
+    for b in range(0, len(features)):
+        temp_features.append(features[b])
+        temp_labels.append(labels[b])
+        if (math.fmod(b, batch_size) == batch_size - 1.0) or b == len(features)-1:
+            output.append([temp_features, temp_labels])
+            temp_features = []
+            temp_labels = []
+
+    return output
