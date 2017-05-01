@@ -16,7 +16,7 @@ from keras.layers.convolutional import Convolution2D
 
 # Build Convolutional Neural Network in Keras Here
 model = Sequential()
-model.add(Convolution2D(32, (3, 3), input_shape=(32, 32, 3)))
+model.add(Convolution2D(32, 3, 3, input_shape=(32, 32, 3)))
 model.add(Activation('relu'))
 model.add(Flatten())
 model.add(Dense(128))
