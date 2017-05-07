@@ -1,4 +1,5 @@
 import time
+import os.path
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -25,9 +26,19 @@ fc8b = tf.Variable(tf.zeros(nb_classes))
 logits = tf.nn.xw_plus_b(fc7, fc8W, fc8b)
 probs = tf.nn.softmax(logits)
 
-init = tf.global_variables_initializer()
+#with tf.Session() as sess:
 sess = tf.Session()
-sess.run(init)
+
+if os.path.isfile('./alexnet_optim.meta'):
+    saver = tf.train.Saver()
+    saver.restore(sess, "./alexnet_optim")
+    print()
+    print("Model restored")
+else:
+    init = tf.global_variables_initializer()
+    sess.run(init)
+    print()
+    print("Initializing model")
 
 # Read Images
 im1 = imread("construction.jpg").astype(np.float32)
@@ -39,6 +50,7 @@ im2 = im2 - np.mean(im2)
 # Run Inference
 t = time.time()
 output = sess.run(probs, feed_dict={x: [im1, im2]})
+t2 = time.time()
 
 # Print Output
 for input_im_ind in range(output.shape[0]):
@@ -48,4 +60,4 @@ for input_im_ind in range(output.shape[0]):
         print("%s: %.3f" % (sign_names.ix[inds[-1 - i]][1], output[input_im_ind, inds[-1 - i]]))
     print()
 
-print("Time: %.3f seconds" % (time.time() - t))
+print("Time: %.3f seconds" % (t2 - t))
