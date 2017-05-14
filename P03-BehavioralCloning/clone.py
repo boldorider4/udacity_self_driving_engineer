@@ -16,9 +16,13 @@ for line in lines[1:]:
     filename = source_path.split('/')[-1]
     current_path = './' + train_dir_name + '/IMG/' + filename
     image = cv2.imread(current_path)
+    image_flipped = cv2.flip(image, 1)
     images.append(image)
+    images.append(image_flipped)
     measurement = float(line[3])
+    measurement_flipped = -measurement
     measurements.append(measurement)
+    measurements.append(measurement_flipped)
 
 X_train = np.array(images)
 y_train = np.array(measurements)
@@ -40,5 +44,5 @@ model.add(Dense(84))
 model.add(Dense(1))
 
 model.compile(optimizer='adam', loss='mse')
-model.fit(X_train, y_train, nb_epoch=5, validation_split=.2, shuffle=True)
+model.fit(X_train, y_train, nb_epoch=3, validation_split=.2, shuffle=True)
 model.save('model.h5')
