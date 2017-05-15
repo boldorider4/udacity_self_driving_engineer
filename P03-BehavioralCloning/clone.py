@@ -47,11 +47,12 @@ y_train = np.array(measurements)
 
 from keras.models import Sequential
 from keras.layers.core import Flatten, Dense, Dropout, Lambda
-from keras.layers.convolutional import Conv2D
+from keras.layers.convolutional import Conv2D, Cropping2D
 from keras.layers.pooling import MaxPooling2D
 
 model = Sequential()
-model.add(Lambda(lambda x: (x / 255.0) - 0.5, input_shape=X_train.shape[1:]))
+model.add(Cropping2D(cropping=((55,25), (0,0)), input_shape=X_train.shape[1:]))
+model.add(Lambda(lambda x: (x / 255.0) - 0.5))
 model.add(Conv2D(nb_filter=6, nb_row=5, nb_col=5, activation='relu'))
 model.add(MaxPooling2D())
 model.add(Conv2D(nb_filter=6, nb_row=5, nb_col=5, activation='relu'))
