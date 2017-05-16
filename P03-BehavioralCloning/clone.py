@@ -77,10 +77,13 @@ model.add(Conv2D(nb_filter=36, nb_row=5, nb_col=5, subsample=(2,2), activation='
 model.add(Conv2D(nb_filter=48, nb_row=5, nb_col=5, subsample=(2,2), activation='relu', name='conv2d48_layer'))
 model.add(Conv2D(nb_filter=64, nb_row=3, nb_col=3, activation='relu', name='conv2d64_layer'))
 model.add(Conv2D(nb_filter=64, nb_row=3, nb_col=3, activation='relu', name='conv2d64_2_layer'))
+model.add(Dropout(.6, name='dropout1_layer'))
 model.add(Flatten(name='flatten_layer'))
 model.add(Dense(1164, name='dense1164_layer'))
 model.add(Dense(100, name='dense100_layer'))
+model.add(Dropout(.7, name='dropout2_layer'))
 model.add(Dense(50, name='dense50_layer'))
+model.add(Dropout(.5, name='dropout3_layer'))
 model.add(Dense(1, name='output_layer'))
 
 model.compile(optimizer='adam', loss='mse')
@@ -93,6 +96,7 @@ elif os.path.isfile('./model.nvidia.h5'):
     print('loaded entire model!')
     model = load_model('model.nvidia.h5')
 
+model.optimizer.lr.assign(0.0001)
 history_object = model.fit_generator(train_generator, samples_per_epoch=len(train_samples), \
                                      validation_data=validation_generator, \
                                      nb_val_samples=len(validation_samples), nb_epoch=5)
