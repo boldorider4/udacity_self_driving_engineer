@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import sklearn
 import matplotlib.pyplot as plt
+import os.path
 
 def generator(samples, batch_size=32):
     num_samples = len(samples)
@@ -60,32 +61,46 @@ train_samples, validation_samples = train_test_split(lines[1:], test_size=.2)
 train_generator = generator(train_samples, batch_size=64)
 validation_generator = generator(validation_samples, batch_size=64)
 
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.layers.core import Flatten, Dense, Dropout, Lambda
 from keras.layers.convolutional import Conv2D, Cropping2D
 from keras.layers.pooling import MaxPooling2D
 
 input_shape = (160, 320, 3)
 
+# model architecture
 model = Sequential()
-model.add(Cropping2D(cropping=((55,25), (0,0)), input_shape=input_shape))
-model.add(Lambda(lambda x: (x / 255.0) - 0.5))
-model.add(Conv2D(nb_filter=24, nb_row=5, nb_col=5, subsample=(2,2), activation='relu'))
-model.add(Conv2D(nb_filter=36, nb_row=5, nb_col=5, subsample=(2,2), activation='relu'))
-model.add(Conv2D(nb_filter=48, nb_row=5, nb_col=5, subsample=(2,2), activation='relu'))
-model.add(Conv2D(nb_filter=64, nb_row=3, nb_col=3, activation='relu'))
-model.add(Conv2D(nb_filter=64, nb_row=3, nb_col=3, activation='relu'))
-model.add(Flatten())
-model.add(Dense(1164))
-model.add(Dense(100))
-model.add(Dense(50))
-model.add(Dense(1))
+model.add(Cropping2D(cropping=((55,25), (0,0)), input_shape=input_shape, name='input_layer'))
+model.add(Lambda(lambda x: (x / 255.0) - 0.5, name='lambda_layer'))
+model.add(Conv2D(nb_filter=24, nb_row=5, nb_col=5, subsample=(2,2), activation='relu', name='conv2d24_layer'))
+model.add(Conv2D(nb_filter=36, nb_row=5, nb_col=5, subsample=(2,2), activation='relu', name='conv2d36_layer'))
+model.add(Conv2D(nb_filter=48, nb_row=5, nb_col=5, subsample=(2,2), activation='relu', name='conv2d48_layer'))
+model.add(Conv2D(nb_filter=64, nb_row=3, nb_col=3, activation='relu', name='conv2d64_layer'))
+model.add(Conv2D(nb_filter=64, nb_row=3, nb_col=3, activation='relu', name='conv2d64_2_layer'))
+model.add(Flatten(name='flatten_layer'))
+model.add(Dense(1164, name='dense1164_layer'))
+model.add(Dense(100, name='dense100_layer'))
+model.add(Dense(50, name='dense50_layer'))
+model.add(Dense(1, name='output_layer'))
 
 model.compile(optimizer='adam', loss='mse')
+
+# loading model weights
+if os.path.isfile('./model_weights.nvidia.h5'):
+    print('loaded weights into model!')
+    model.load_weights('model_weights.nvidia.h5', by_name=True)
+elif os.path.isfile('./model.nvidia.h5'):
+    print('loaded entire model!')
+    model = load_model('model.nvidia.h5')
+
 history_object = model.fit_generator(train_generator, samples_per_epoch=len(train_samples), \
                                      validation_data=validation_generator, \
-                                     nb_val_samples=len(validation_samples), nb_epoch=2)
+                                     nb_val_samples=len(validation_samples), nb_epoch=5)
+
+# saving the model and weights
+print('weights and model saved!')
 model.save('model.nvidia.h5')
+model.save_weights('model_weights.nvidia.h5')
 
 ### print the keys contained in the history object
 print(history_object.history.keys())
