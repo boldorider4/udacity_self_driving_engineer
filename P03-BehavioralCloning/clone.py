@@ -58,6 +58,8 @@ with open('./' + train_dir_name + '/driving_log.csv') as csvfile:
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(lines[1:], test_size=.2)
 
+nb_train_samples = len(lines) * 3 * 2 # number of lines x 3 (one for each center/left/right file) x 2 (flipped images)
+nb_validation_samples = nb_train_samples
 train_generator = generator(train_samples, batch_size=64)
 validation_generator = generator(validation_samples, batch_size=64)
 
@@ -89,22 +91,22 @@ model.add(Dense(1, name='output_layer'))
 model.compile(optimizer='adam', loss='mse')
 
 # loading model weights
-if os.path.isfile('./model_weights.nvidia.h5'):
+if os.path.isfile('./model_weights.h5'):
     print('loaded weights into model!')
-    model.load_weights('model_weights.nvidia.h5', by_name=True)
-elif os.path.isfile('./model.nvidia.h5'):
+    model.load_weights('model_weights.h5', by_name=True)
+elif os.path.isfile('./model.h5'):
     print('loaded entire model!')
-    model = load_model('model.nvidia.h5')
+    model = load_model('model.h5')
 
-model.optimizer.lr.assign(0.0001)
-history_object = model.fit_generator(train_generator, samples_per_epoch=len(train_samples), \
+model.optimizer.lr.assign(0.01)
+history_object = model.fit_generator(train_generator, samples_per_epoch=nb_train_samples, \
                                      validation_data=validation_generator, \
-                                     nb_val_samples=len(validation_samples), nb_epoch=5)
+                                     nb_val_samples=nb_validation_samples, nb_epoch=5)
 
 # saving the model and weights
 print('weights and model saved!')
-model.save('model.nvidia.h5')
-model.save_weights('model_weights.nvidia.h5')
+model.save('model.h5')
+model.save_weights('model_weights.h5')
 
 ### print the keys contained in the history object
 print(history_object.history.keys())
