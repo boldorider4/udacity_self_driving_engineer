@@ -1,8 +1,8 @@
 import csv
-import cv2
 import numpy as np
 import sklearn
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 import os.path
 
 def generator(samples, batch_size=32):
@@ -23,12 +23,12 @@ def generator(samples, batch_size=32):
 
                 # read in images from center, left and right cameras
                 current_path = './' + train_dir_name + '/IMG/'
-                img_center = cv2.imread(current_path + batch_sample[0].split('/')[-1].lstrip())
-                img_left = cv2.imread(current_path + batch_sample[1].split('/')[-1].lstrip())
-                img_right = cv2.imread(current_path + batch_sample[2].split('/')[-1].lstrip())
-                img_center_flipped = cv2.flip(img_center, 1)
-                img_left_flipped = cv2.flip(img_left, 1)
-                img_right_flipped = cv2.flip(img_right, 1)
+                img_center = mpimg.imread(current_path + batch_sample[0].split('/')[-1].lstrip())
+                img_left = mpimg.imread(current_path + batch_sample[1].split('/')[-1].lstrip())
+                img_right = mpimg.imread(current_path + batch_sample[2].split('/')[-1].lstrip())
+                img_center_flipped = np.fliplr(img_center)
+                img_left_flipped = np.fliplr(img_left)
+                img_right_flipped = np.fliplr(img_right)
 
                 images.append(img_center)
                 images.append(img_left)
