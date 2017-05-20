@@ -1,9 +1,9 @@
 import csv
-import cv2
 import numpy as np
+import matplotlib.image as mpimg
 
 lines = []
-train_dir_name = 'data'
+train_dir_name = 'img'
 with open('./' + train_dir_name + '/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
@@ -21,13 +21,13 @@ for line in lines[1:]:
     steering_right = steering_center - correction
 
     # read in images from center, left and right cameras
-    current_path = './' + train_dir_name + '/'
-    img_center = cv2.imread(current_path + line[0].lstrip())
-    img_left = cv2.imread(current_path + line[1].lstrip())
-    img_right = cv2.imread(current_path + line[2].lstrip())
-    img_center_flipped = cv2.flip(img_center, 1)
-    img_left_flipped = cv2.flip(img_left, 1)
-    img_right_flipped = cv2.flip(img_right, 1)
+    current_path = ''
+    img_center = mpimg.imread(current_path + line[0].lstrip())
+    img_left = mpimg.imread(current_path + line[1].lstrip())
+    img_right = mpimg.imread(current_path + line[2].lstrip())
+    img_center_flipped = np.fliplr(img_center)
+    img_left_flipped = np.fliplr(img_left)
+    img_right_flipped = np.fliplr(img_right)
 
     images.append(img_center)
     images.append(img_left)

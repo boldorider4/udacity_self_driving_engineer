@@ -1,9 +1,9 @@
 import csv
-import cv2
 import numpy as np
+import matplotlib.image as mpimg
 
 lines = []
-train_dir_name = 'my_data'
+train_dir_name = 'img'
 with open('./' + train_dir_name + '/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
@@ -15,7 +15,7 @@ for line in lines[1:]:
     source_path = line[0]
     filename = source_path.split('/')[-1]
     current_path = './' + train_dir_name + '/IMG/' + filename
-    image = cv2.imread(current_path)
+    image = mpimg.imread(current_path)
     images.append(image)
     measurement = float(line[3])
     measurements.append(measurement)
