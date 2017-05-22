@@ -4,6 +4,7 @@ import sklearn
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os.path
+from math import ceil
 
 # generator function to yield batches of samples used to train or validate a model
 def generator(samples, batch_size=32):
@@ -19,7 +20,7 @@ def generator(samples, batch_size=32):
             for batch_sample in batch_samples:
                 steering_center = float(batch_sample[3])
                 # create adjusted steering measurements for the side camera images
-                correction = .2
+                correction = .15
                 steering_left = steering_center + correction
                 steering_right = steering_center - correction
 
@@ -63,11 +64,11 @@ with open('./' + train_dir_name + '/driving_log.csv') as csvfile:
 
 # split dataset into training and validation set
 from sklearn.model_selection import train_test_split
-train_samples, validation_samples = train_test_split(lines[1:], test_size=.2)
+train_samples, validation_samples = train_test_split(lines, test_size=.2)
 
 # number of lines x 3 (one for each center/left/right file) x 2 (flipped images)
 nb_train_samples = len(lines) * 3 * 2
-nb_validation_samples = nb_train_samples * .2
+nb_validation_samples = ceil(nb_train_samples * .2)
 # create batch generators for training and validation sets
 train_generator = generator(train_samples, batch_size=64)
 validation_generator = generator(validation_samples, batch_size=64)
@@ -98,18 +99,20 @@ model.add(Dropout(.5, name='dropout3_layer'))
 model.add(Dense(1, name='output_layer'))
 
 model.compile(optimizer='adam', loss='mse')
+for layer in model.layers[:9]:
+    layer.trainable = False
 
 # loading model weights
-if os.path.isfile('./model_weights.h5'):
+if os.path.isfile('./model_weights.easy_track.h5'):
     print('loaded weights into model!')
-    model.load_weights('model_weights.h5', by_name=True)
+    model.load_weights('model_weights.easy_track.h5', by_name=True)
 # if no model weight is present, try and load entire model
-elif os.path.isfile('./model.h5'):
+elif os.path.isfile('./model.easy_track.h5'):
     print('loaded entire model!')
-    model = load_model('model.h5')
+    model = load_model('model.easy_track.h5')
 
 # change learning rate when fine tune
-model.optimizer.lr.assign(0.01)
+model.optimizer.lr.assign(0.0005)
 # run training session
 history_object = model.fit_generator(train_generator, samples_per_epoch=nb_train_samples, \
                                      validation_data=validation_generator, \
@@ -117,8 +120,8 @@ history_object = model.fit_generator(train_generator, samples_per_epoch=nb_train
 
 # saving the model and weights
 print('weights and model saved!')
-model.save('model.h5')
-model.save_weights('model_weights.h5')
+model.save('model.easy_track.h5')
+model.save_weights('model_weights.easy_track.h5')
 
 ### print the keys contained in the history object
 print(history_object.history.keys())
