@@ -98,9 +98,10 @@ model.add(Dense(50, name='dense50_layer'))
 model.add(Dropout(.5, name='dropout3_layer'))
 model.add(Dense(1, name='output_layer'))
 
-model.compile(optimizer='adam', loss='mse')
-for layer in model.layers[:9]:
-    layer.trainable = False
+# freeze weights for certain layers when fine tuning
+# model.compile(optimizer='adam', loss='mse')
+# for layer in model.layers[:9]:
+#     layer.trainable = False
 
 # loading model weights
 if os.path.isfile('./model_weights.easy_track.h5'):
@@ -111,8 +112,9 @@ elif os.path.isfile('./model.easy_track.h5'):
     print('loaded entire model!')
     model = load_model('model.easy_track.h5')
 
-# change learning rate when fine tune
-model.optimizer.lr.assign(0.0005)
+# change learning rate when fine tuning
+# model.optimizer.lr.assign(0.0005)
+
 # run training session
 history_object = model.fit_generator(train_generator, samples_per_epoch=nb_train_samples, \
                                      validation_data=validation_generator, \
