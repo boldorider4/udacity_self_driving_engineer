@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle
 import cv2
-from lesson_functions import *
+from 11_lesson_functions import *
 
 dist_pickle = pickle.load( open("svc_pickle.p", "rb" ) )
 svc = dist_pickle["svc"]
