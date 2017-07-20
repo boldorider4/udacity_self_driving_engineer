@@ -11,17 +11,6 @@ The goals / steps of this project are the following:
 * Warp the detected lane boundaries back onto the original image.
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-[//]: # (Image References)
-
-[image1]: ./output_images/calibration2_cornersdrawn.jpg "Corners drawn on chessboard"
-[image2]: ./output_images/calibration2_undistort.jpg "Undistorted chessboard image"
-[image21]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
-
 ### [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
 #### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.
@@ -161,16 +150,16 @@ As shown in notebook cell #9, the curvature and the lane position (expressed in 
 1. *get_curvature*: evaluates a polynomial curve, characterized by the search-derived coefficients, at the bottom of the frame (x-axis=720, the reference position of the car).
 2. *get_lane_x_coord*: will be used to derive the position of each lane line at the bottom of the frame (x-axis=720, the reference position of the car). The two coordinates can be used to derive the center position of the lane with respect to the center position along the x-axis of the image.
 
-After deriving the curvature and lane position for a given frame, the figures are still expressed in pixel coordinates. In order for them to be expressed in meters, a rough estimate for a conversion rate has been derived based on the assumption that a warped image is 30 meters long corresponding to 720 pixels along the y-axis and about 3.7 meters corresponding to 1080 pixels (distance in pixels measured on average between the lane line x coordinates at the bottom of the frame) along the x-axis.
+After deriving the curvature and lane position for a given frame, the figures are still expressed in pixel coordinates. In order for them to be expressed in meters, a rough estimate for a conversion rate has been derived based on the assumption that a warped image is 30 meters long corresponding to 720 pixels along the y-axis and about 3.7 meters corresponding to 700 pixels along the x-axis.
 
 Here are some curvature values found on some of the test warped binary images (some images were very noisy so values will be more realistic once they get low-pass filtered over a series of frames):
 
 * test image 3 curvature:
   left 3725 px, right 2957 px
-  left 1855 m, right 1498 m
+  left 1202 m, right 971 m
 * test image 4 curvature:
   left 7582 px, right 5432 px
-  left 3817 m, right 2720 m
+  left 2474 m, right 1763 m
   
 
 ### 6. Defining a function for performing sanity checks on lane lines
@@ -221,4 +210,3 @@ The video in *./project_video_out.mp4* is the result of using the processing pip
 * Things that worked for me:
 * * I spent significant effort in filtering out invalid lane lines ('sanity_check') based on sensible criteria such as lines that are parallel and consistent curvature. After a lot of tolerance parameter tuning, the results were very satisfying.
 * * Leveraging the saturation channel in the binary image creation turned out very effective for detecting the yellow line, wherease the grayscale thresholding highlighted the white line.
-
