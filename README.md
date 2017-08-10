@@ -1,2 +1,4 @@
-# udacity_self_driving_engineer
-Repo for Udacity's 'Self Driving Engineer' program exercise files and other
+# Udacity Self-Driving Car Engineer Program
+## Term 1
+
+Repository containg Udacity's 'Self-Driving Car Engineer Program' lecture files and project assignment solutions.
