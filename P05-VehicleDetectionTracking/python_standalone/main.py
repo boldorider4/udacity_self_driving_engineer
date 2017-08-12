@@ -12,7 +12,7 @@ def main():
   else:
     video_output_file = 'project_video_out_py.mp4'
 
-  video_input = VideoFileClip("../P04-AdvancedLaneFinding/project_video.mp4")
+  video_input = VideoFileClip("../../P04-AdvancedLaneFinding/project_video.mp4")
   if Debug_short_video:
     video_input = video_input.subclip(6, 14)
 
